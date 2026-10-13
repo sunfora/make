@@ -28,6 +28,7 @@ typedef struct
   } gmk_floc;
 
 typedef char *(*gmk_func_ptr)(const char *nm, unsigned int argc, char **argv);
+typedef void  (*gmk_hook_ptr)(void);
 
 /* When an object is loaded by GNU Make, a setup method will be invoked.
    The name of the method is either derived from the filename of the object,
@@ -90,6 +91,8 @@ GMK_EXPORT char *gmk_expand (const char *str);
 GMK_EXPORT void gmk_add_function (const char *name, gmk_func_ptr func,
                                   unsigned int min_args, unsigned int max_args,
                                   unsigned int flags);
+
+GMK_EXPORT void gmk_add_hook (const char *name, gmk_hook_ptr hook);
 
 #define GMK_FUNC_DEFAULT    0x00
 #define GMK_FUNC_NOEXPAND   0x01

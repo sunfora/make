@@ -663,6 +663,10 @@ int load_file (const floc *flocp, struct file *file, int noerror);
 int unload_file (const char *name);
 void unload_all (void);
 
+/* Hooks */
+typedef char *(*gmk_hook_format_command_ptr)(const char *command);
+extern gmk_hook_format_command_ptr gmk_hook_format_command;
+
 /* Maintainer mode support */
 #ifdef MAKE_MAINTAINER_MODE
 # define SPIN(_s) spin (_s)

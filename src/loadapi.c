@@ -19,6 +19,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "dep.h"
 #include "filedef.h"
 #include "variable.h"
+#include <string.h>
 
 /* Allocate a buffer in our context, so we can free it.  */
 char *
@@ -79,4 +80,14 @@ gmk_add_function (const char *name, gmk_func_ptr func,
                   unsigned int min, unsigned int max, unsigned int flags)
 {
   define_new_function (reading_file, name, min, max, flags, func);
+}
+
+/* Register a special hook to be called by gnu make. */
+void
+gmk_add_hook (const char *name, gmk_hook_ptr hook)
+{
+  if (strcmp("format_command", name) == 0)
+    {
+      gmk_hook_format_command = (gmk_hook_format_command_ptr) hook;
+    }
 }

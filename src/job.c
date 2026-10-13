@@ -246,6 +246,8 @@ unsigned long job_counter = 0;
 /* Number of jobserver tokens this instance is currently using.  */
 
 unsigned int jobserver_tokens = 0;
+
+gmk_hook_format_command_ptr gmk_hook_format_command = NULL;
 
 
 #if MK_OS_W32
@@ -1142,6 +1144,15 @@ free_child (struct child *child)
 }
 
 
+char*
+format_command (char* command)
+{
+  if (gmk_hook_format_command)
+    return gmk_hook_format_command (command);
+  else
+    return NULL;
+}
+
 /* Start a job to run the commands specified in CHILD.
    CHILD is updated to reflect the commands and ID of the child process.
 
@@ -1335,7 +1346,18 @@ start_job_command (struct child *child)
   /* Print the command if appropriate.  */
   if (just_print_flag || ISDB (DB_PRINT)
       || (NONE_SET (flags, COMMANDS_SILENT) && !run_silent))
-    OS (message, 0, "%s", p);
+  {
+    char *formatted = format_command (p);
+    if (formatted)
+      {
+        OS (message, 0, "%s", formatted);
+        gmk_free (formatted);
+      }
+    else
+      {
+        OS (message, 0, "%s", p);
+      }
+  }
 
   /* Tell update_goal_chain that a command has been started on behalf of
      this target.  It is important that this happens here and not in

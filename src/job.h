@@ -84,5 +84,7 @@ pid_t exec_command (char **argv, char **envp);
 
 void unblock_all_sigs (void);
 
+char *format_command (char *command);
+
 extern unsigned int job_slots_used;
 extern unsigned int jobserver_tokens;
